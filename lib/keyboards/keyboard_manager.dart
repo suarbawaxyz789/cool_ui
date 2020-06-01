@@ -22,6 +22,7 @@ class CoolKeyboard {
   static Timer clearTask;
 
   static init(KeyboardRootState root, BuildContext context) {
+    print("################################   debug for   initKeyboard");
     _root = root;
     _context = context;
     interceptorInput();
@@ -50,7 +51,7 @@ class CoolKeyboard {
           if (_currentKeyboard != null) {
             if (clearTask == null) {
               clearTask = new Timer(Duration(milliseconds: 16),
-                  () => hideKeyboard(animation: true));
+                      () => hideKeyboard(animation: true));
             }
             return _codec.encodeSuccessEnvelope(null);
           } else {
@@ -67,7 +68,7 @@ class CoolKeyboard {
         case 'TextInput.clearClient':
           if (clearTask == null) {
             clearTask = new Timer(Duration(milliseconds: 16),
-                () => hideKeyboard(animation: true));
+                    () => hideKeyboard(animation: true));
           }
           clearKeyboard();
           break;
@@ -92,8 +93,8 @@ class CoolKeyboard {
                   ]);
                   ServicesBinding.instance.defaultBinaryMessenger
                       .handlePlatformMessage(
-                          "flutter/textinput",
-                          _codec.encodeMethodCall(callbackMethodCall),
+                      "flutter/textinput",
+                      _codec.encodeMethodCall(callbackMethodCall),
                           (data) {});
                 });
               if (_pageKey != null) {
@@ -119,8 +120,8 @@ class CoolKeyboard {
     });
   }
 
-  static Future<ByteData> _sendPlatformMessage(
-      String channel, ByteData message) {
+  static Future<ByteData> _sendPlatformMessage(String channel,
+      ByteData message) {
     final Completer<ByteData> completer = Completer<ByteData>();
     ui.window.sendPlatformMessage(channel, message, (ByteData reply) {
       try {
@@ -131,7 +132,7 @@ class CoolKeyboard {
           stack: stack,
           library: 'services library',
           context:
-              ErrorDescription('during a platform message response callback'),
+          ErrorDescription('during a platform message response callback'),
         ));
       }
     });
@@ -211,6 +212,16 @@ class CoolKeyboard {
     } catch (_) {}
   }
 
+  static isKeyboardOpen() {
+    if (_pageKey == null) {
+      return false;
+    }
+    if (_pageKey?.currentState == null) {
+      return false;
+    }
+    return !(_pageKey?.currentState?.isClose);
+  }
+
   static clearKeyboard() {
     _currentKeyboard = null;
     if (_keyboardController != null) {
@@ -238,12 +249,14 @@ class CoolKeyboard {
 class KeyboardConfig {
   final KeyboardBuilder builder;
   final GetKeyboardHeight getHeight;
+
   const KeyboardConfig({this.builder, this.getHeight});
 }
 
 class InputClient {
   final int connectionId;
   final TextInputConfiguration configuration;
+
   const InputClient({this.connectionId, this.configuration});
 
   factory InputClient.fromJSON(List<dynamic> encoded) {
@@ -256,9 +269,9 @@ class InputClient {
             actionLabel: encoded[1]['actionLabel'],
             inputAction: _toTextInputAction(encoded[1]['inputAction']),
             textCapitalization:
-                _toTextCapitalization(encoded[1]['textCapitalization']),
+            _toTextCapitalization(encoded[1]['textCapitalization']),
             keyboardAppearance:
-                _toBrightness(encoded[1]['keyboardAppearance'])));
+            _toBrightness(encoded[1]['keyboardAppearance'])));
   }
 
   static TextInputAction _toTextInputAction(String action) {
@@ -355,7 +368,10 @@ class CKTextInputType extends TextInputType {
   }
 
   @override
-  int get hashCode => this.toString().hashCode;
+  int get hashCode =>
+      this
+          .toString()
+          .hashCode;
 
   factory CKTextInputType.fromJSON(Map<String, dynamic> encoded) {
     return CKTextInputType(
@@ -369,6 +385,7 @@ class CKTextInputType extends TextInputType {
 class KeyboardPage extends StatefulWidget {
   final WidgetBuilder builder;
   final double height;
+
   const KeyboardPage({this.builder, this.height, Key key}) : super(key: key);
 
   @override

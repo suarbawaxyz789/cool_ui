@@ -21,12 +21,21 @@ class KeyboardRootState extends State<KeyboardRootWidget> {
   WidgetBuilder _keyboardbuilder;
 
   bool get hasKeyboard => _keyboardbuilder != null;
+
   // List<OverlayEntry> _initialEntries = [];
 
   @override
   void initState() {
     super.initState();
     // _initialEntries.add(this.initChild());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    clearKeyboard();
+    CoolKeyboard.clearKeyboard();
+    print("Keyboard Root Dispose");
   }
 
   @override

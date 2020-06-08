@@ -194,7 +194,9 @@ class CoolKeyboard {
       //   }
       // });
       if (animation) {
-        _pageKey.currentState.exitKeyboard();
+        if(_pageKey?.currentState != null){
+          _pageKey.currentState.exitKeyboard();
+        }
         Future.delayed(Duration(milliseconds: 116)).then((_) {
           _root.clearKeyboard();
         });

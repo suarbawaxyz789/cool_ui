@@ -60,13 +60,17 @@ class KeyboardRootState extends State<KeyboardRootWidget> {
 
   setKeyboard(WidgetBuilder keyboardbuilder) {
     this._keyboardbuilder = keyboardbuilder;
-    setState(() {});
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      setState(() {});
+    });
   }
 
   clearKeyboard() {
     if (this._keyboardbuilder != null) {
       this._keyboardbuilder = null;
-      setState(() {});
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        setState(() {});
+      });
     }
   }
 }
